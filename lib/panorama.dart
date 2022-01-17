@@ -141,7 +141,7 @@ class Panorama extends StatefulWidget {
 class _PanoramaState extends State<Panorama>
     with SingleTickerProviderStateMixin {
   Scene? scene;
-  Object? surface;
+  Object? surface = Object(visiable: false);
   late double latitude;
   late double longitude;
   double latitudeDelta = 0;
@@ -487,19 +487,25 @@ class _PanoramaState extends State<Panorama>
 
   @override
   Widget build(BuildContext context) {
-    Widget pano = Container(
-        color: Colors.red,
-        child: Stack(
-          children: [
-            Cube(interactive: false, onSceneCreated: _onSceneCreated),
-            StreamBuilder(
-              stream: _stream,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                return buildHotspotWidgets(widget.hotspots);
-              },
-            ),
-          ],
-        ));
+    Widget pano = Stack(
+      children: [
+        Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+        Cube(
+          interactive: false,
+          onSceneCreated: _onSceneCreated,
+        ),
+        StreamBuilder(
+          stream: _stream,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return buildHotspotWidgets(widget.hotspots);
+          },
+        ),
+      ],
+    );
 
     return widget.interactive
         ? GestureDetector(
